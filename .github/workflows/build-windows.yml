@@ -1,0 +1,41 @@
+﻿name: Build Windows
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Build Windows (Release)
+        run: flutter build windows --release
+
+      - name: Zip build
+        shell: pwsh
+        run: |
+          $out = "build/windows/x64/runner/Release"
+          $zip = "rauli_windows_release.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path "$out/*" -DestinationPath $zip -Force
+          Write-Host "Created $zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rauli-windows-release
+          path: rauli_windows_release.zip

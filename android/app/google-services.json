@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "406292569158",
+    "firebase_url": "https://rauli-e7fdb-default-rtdb.firebaseio.com",
+    "project_id": "rauli-e7fdb",
+    "storage_bucket": "rauli-e7fdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406292569158:android:6329c010b17f3b11317e47",
+        "android_client_info": {
+          "package_name": "com.example.rauli_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC80lH3UYKFoGy8c-RzJ6PMvwILCii5CzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

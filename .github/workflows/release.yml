@@ -1,0 +1,44 @@
+﻿name: Release
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - run: flutter build windows --release
+
+      - name: Zip build
+        shell: pwsh
+        run: |
+          $out = "build/windows/x64/runner/Release"
+          $zip = "rauli_windows_release.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path "$out/*" -DestinationPath $zip -Force
+
+      - name: Create tag/version
+        id: ver
+        shell: pwsh
+        run: |
+          $ts = Get-Date -Format "yyyy.MM.dd.HHmm"
+          echo "tag=v$ts" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: RAULI ${{ steps.ver.outputs.tag }}
+          files: rauli_windows_release.zip
